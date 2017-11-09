@@ -106,8 +106,8 @@ void testTransistor(int toTest)
 
 void printTransistorReadings()
 {
-  Serial.println("LHS Transistor: " + analogRead(LHS_TRANSISTOR));
-  Serial.println("RHS Transistor: " + analogRead(RHS_TRANSISTOR));
-  Serial.println("MID Transistor: " + analogRead(MID_TRANSISTOR));
+  Serial.println("LHS Transistor: " + String(analogRead(LHS_TRANSISTOR)));
+  Serial.println("RHS Transistor: " + String(analogRead(RHS_TRANSISTOR)));
+  Serial.println("MID Transistor: " + String(analogRead(MID_TRANSISTOR)));
 }
 
