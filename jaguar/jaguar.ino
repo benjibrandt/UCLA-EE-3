@@ -24,6 +24,9 @@ void initMotors();
 // Lights up LEDs based on transistor readings.
 void testTransistor();
 
+// Print transitors readings.
+void printTransistorReadings();
+
 ///////////////////////////
 // MAIN
 //////////////////////////
@@ -38,7 +41,7 @@ void setup()
 void loop()
 {
 
-  testTransistor(RHS_TRANSISTOR);
+  printTransistorReadings();
 
   // analogWrite(LHS_MOTOR, HIGH);
   // analogWrite(RHS_MOTOR, LOW);
@@ -65,7 +68,7 @@ void testTransistor(int toTest)
   switch(toTest)
   {
     case RHS_TRANSISTOR:
-      if( digitalRead(RHS_TRANSISTOR) == HIGH )
+      if( analogRead(RHS_TRANSISTOR) == HIGH )
       {
         digitalWrite(GREEN_LED, HIGH);
       }
@@ -76,7 +79,7 @@ void testTransistor(int toTest)
       }
       break;
     case LHS_TRANSISTOR:
-      if( digitalRead(LHS_TRANSISTOR) == HIGH )
+      if( analogRead(LHS_TRANSISTOR) == HIGH )
       {
         digitalWrite(BLUE_LED, HIGH);
       }
@@ -87,7 +90,7 @@ void testTransistor(int toTest)
       }
       break;
     case MID_TRANSISTOR:
-      if( digitalRead(MID_TRANSISTOR) == HIGH )
+      if( analogRead(MID_TRANSISTOR) == HIGH )
       {
         digitalWrite(RED_LED, HIGH);
       }
@@ -99,5 +102,12 @@ void testTransistor(int toTest)
       }
       break;
   }
+}
+
+void printTransistorReadings()
+{
+  Serial.println("LHS Transistor: " + analogRead(LHS_TRANSISTOR));
+  Serial.println("RHS Transistor: " + analogRead(RHS_TRANSISTOR));
+  Serial.println("MID Transistor: " + analogRead(MID_TRANSISTOR));
 }
 
