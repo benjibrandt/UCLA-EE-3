@@ -31,7 +31,7 @@ void loop()
   digitalWrite(RED_LED, HIGH);
 
   analogWrite(LHS_MOTOR, HIGH);
-  analogWrite(RHS_MOTOR, HIGH);
+  analogWrite(RHS_MOTOR, LOW);
 }
 
 ///////////////////////////
