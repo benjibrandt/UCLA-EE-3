@@ -21,6 +21,9 @@ void initVisibleLEDS();
 // Sets pinMode for the two motors.
 void initMotors();
 
+// Lights up LEDs based on transistor readings.
+void testTransistor();
+
 ///////////////////////////
 // MAIN
 //////////////////////////
@@ -34,38 +37,8 @@ void setup()
 
 void loop()
 {
-  // Test RHS
-  if( digitalRead(RHS_TRANSISTOR) == HIGH )
-  {
-    digitalWrite(GREEN_LED, HIGH);
-  }
-  else
-  {
-    digitalWrite(GREEN_LED, HIGH);
-    digitalWrite(RED_LED, HIGH);
-  }
-  // Test LHS
-  if( digitalRead(LHS_TRANSISTOR) == HIGH )
-  {
-    digitalWrite(BLUE_LED, HIGH);
-  }
-  else
-  {
-    digitalWrite(BLUE_LED, HIGH);
-    digitalWrite(RED_LED, HIGH);
-  }
-  // Test MID
-  if( digitalRead(MID_TRANSISTOR) == HIGH )
-  {
-    digitalWrite(RED_LED, HIGH);
-  }
-  else
-  {
-    digitalWrite(GREEN_LED, HIGH);
-    digitalWrite(BLUE_LED, HIGH);
-    digitalWrite(RED_LED, HIGH);
-  }
-  
+
+  testTransistor(RHS_TRANSISTOR);
 
   // analogWrite(LHS_MOTOR, HIGH);
   // analogWrite(RHS_MOTOR, LOW);
@@ -85,5 +58,46 @@ void initMotors()
 {
   pinMode(LHS_MOTOR, OUTPUT);
   pinMode(RHS_MOTOR, OUTPUT);
+}
+
+void testTransistor(int toTest)
+{
+  switch(toTest)
+  {
+    case RHS_TRANSISTOR:
+      if( digitalRead(RHS_TRANSISTOR) == HIGH )
+      {
+        digitalWrite(GREEN_LED, HIGH);
+      }
+      else
+      {
+        digitalWrite(GREEN_LED, HIGH);
+        digitalWrite(RED_LED, HIGH);
+      }
+      break;
+    case LHS_TRANSISTOR:
+      if( digitalRead(LHS_TRANSISTOR) == HIGH )
+      {
+        digitalWrite(BLUE_LED, HIGH);
+      }
+      else
+      {
+        digitalWrite(BLUE_LED, HIGH);
+        digitalWrite(RED_LED, HIGH);
+      }
+      break;
+    case MID_TRANSISTOR:
+      if( digitalRead(MID_TRANSISTOR) == HIGH )
+      {
+        digitalWrite(RED_LED, HIGH);
+      }
+      else
+      {
+        digitalWrite(GREEN_LED, HIGH);
+        digitalWrite(BLUE_LED, HIGH);
+        digitalWrite(RED_LED, HIGH);
+      }
+      break;
+  }
 }
 
