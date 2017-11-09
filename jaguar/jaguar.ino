@@ -4,12 +4,14 @@
 #define GREEN_LED 12
 #define BLUE_LED 11
 #define RED_LED 10
-#define LHS_MOTOR 3
-#define RHS_MOTOR 5
+#define LHS_MOTOR 3 // TIP 120
+#define RHS_MOTOR 5 // TIP 125
+
 ///////////////////////////
 // FUNCTION DELCARATIONS
 //////////////////////////
 void initLEDS();
+void initMotors();
 
 ///////////////////////////
 // MAIN
