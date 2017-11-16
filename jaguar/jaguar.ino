@@ -42,6 +42,7 @@ void setup()
 {
   initVisibleLEDS();
   initMotors();
+  initTransistors();
   Serial.begin(9600);
 
 }
