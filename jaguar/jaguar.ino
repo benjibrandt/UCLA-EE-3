@@ -21,6 +21,9 @@ void initVisibleLEDS();
 // Sets pinMode for the two motors.
 void initMotors();
 
+// Sets pinMode for the transistors.
+void initTransistors();
+
 // Lights up LEDs based on transistor readings.
 void testTransistor();
 
@@ -61,6 +64,13 @@ void initMotors()
 {
   pinMode(LHS_MOTOR, OUTPUT);
   pinMode(RHS_MOTOR, OUTPUT);
+}
+
+void initTransistors()
+{
+  pinMode(RHS_TRANSISTOR, INPUT);
+  pinMode(LHS_TRANSISTOR, INPUT);
+  pinMode(MID_TRANSISTOR, INPUT);
 }
 
 void testTransistor(int toTest)
