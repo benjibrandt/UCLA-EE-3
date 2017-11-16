@@ -12,6 +12,11 @@
 #define MID_TRANSISTOR 17   // A3
 
 ///////////////////////////
+// GLOBALS
+//////////////////////////
+int testInt = 0;
+
+///////////////////////////
 // FUNCTION DELCARATIONS
 //////////////////////////
 
@@ -43,8 +48,7 @@ void setup()
 
 void loop()
 {
-
-  printTransistorReadings();
+    printTransistorReadings(LHS_TRANSISTOR);
 
   // analogWrite(LHS_MOTOR, HIGH);
   // analogWrite(RHS_MOTOR, LOW);
@@ -114,10 +118,19 @@ void testTransistor(int toTest)
   }
 }
 
-void printTransistorReadings()
+void printTransistorReadings(int input)
 {
-  Serial.println("LHS Transistor: " + String(analogRead(LHS_TRANSISTOR)));
-  Serial.println("RHS Transistor: " + String(analogRead(RHS_TRANSISTOR)));
-  Serial.println("MID Transistor: " + String(analogRead(MID_TRANSISTOR)));
+  switch( input )
+  {
+    case LHS_TRANSISTOR:
+      Serial.println("LHS Transistor: " + String(analogRead(LHS_TRANSISTOR)));
+      break;
+    case RHS_TRANSISTOR:
+      Serial.println("RHS Transistor: " + String(analogRead(RHS_TRANSISTOR)));
+      break;
+    case MID_TRANSISTOR:
+      Serial.println("MID Transistor: " + String(analogRead(MID_TRANSISTOR)));
+      break;
+  }
 }
 
