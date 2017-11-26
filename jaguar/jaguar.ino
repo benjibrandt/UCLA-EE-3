@@ -7,9 +7,9 @@
 #define RED_LED 10          // D10
 #define LHS_MOTOR 3         // D3; TIP 120 (responds to high)
 #define RHS_MOTOR 5         // D5; TIP 125 (responds to low)
-#define RHS_TRANSISTOR 14   // A0
-#define LHS_TRANSISTOR 19   // A5
-#define MID_TRANSISTOR 17   // A3
+#define RHS_TRANSISTOR 14   // A0 | 951 = full black, 965 = corner black, 976 = edge black, 980 = white
+#define LHS_TRANSISTOR 19   // A5 | 0 = full black, 3 = corner black, 8 = edge black, 14 = white
+#define MID_TRANSISTOR 17   // A3 | 160 = full black, 231 = corner black, 615 = edge black, 922 = white
 
 ///////////////////////////
 // GLOBALS
