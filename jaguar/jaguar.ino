@@ -14,7 +14,7 @@
 ///////////////////////////
 // GLOBALS
 //////////////////////////
-int testInt = 0;
+enum directions { RIGHT = 0, LEFT = 1, STRAIGHT = 2 };
 
 ///////////////////////////
 // FUNCTION DELCARATIONS
@@ -28,6 +28,12 @@ void initMotors();
 
 // Sets pinMode for the transistors.
 void initTransistors();
+
+// Tells robot to turn in direction in int direction which is a value from enum directions
+void turn(int dir);
+
+// testing Motors
+void testMotors();
 
 // Lights up LEDs based on transistor readings.
 void testTransistor();
@@ -50,9 +56,8 @@ void setup()
 void loop()
 {
     printTransistorReadings(LHS_TRANSISTOR);
-
-  // analogWrite(LHS_MOTOR, HIGH);
-  // analogWrite(RHS_MOTOR, LOW);
+    analogWrite(LHS_MOTOR, 255);
+    //analogWrite(RHS_MOTOR, 0); 
 }
 
 ///////////////////////////
@@ -76,6 +81,27 @@ void initTransistors()
   pinMode(RHS_TRANSISTOR, INPUT);
   pinMode(LHS_TRANSISTOR, INPUT);
   pinMode(MID_TRANSISTOR, INPUT);
+}
+
+
+
+void turn(int dir)
+{
+  switch (dir)
+  {
+    case RIGHT:
+      break;
+    case LEFT:
+      break;
+    case STRAIGHT:
+      break;
+  }
+}
+
+void testMotors()
+{
+  analogWrite(RHS_MOTOR, HIGH);
+  analogWrite(LHS_MOTOR, LOW);
 }
 
 void testTransistor(int toTest)
@@ -118,6 +144,8 @@ void testTransistor(int toTest)
       break;
   }
 }
+
+
 
 void printTransistorReadings(int input)
 {
