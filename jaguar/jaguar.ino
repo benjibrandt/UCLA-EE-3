@@ -1,6 +1,7 @@
 ///////////////////////////
 // CONSTANTS
 //////////////////////////
+// Arduino Constants
 //-----  NAME -------------- PIN LABEL -----
 #define GREEN_LED 12        // D12
 #define BLUE_LED 11         // D11
@@ -8,9 +9,19 @@
 #define LHS_MOTOR 3         // D3; TIP 120 (responds to high)
 #define RHS_MOTOR 5         // D5; TIP 125 (responds to low)
 #define RHS_TRANSISTOR 14   // A0 | 951 = full black, 965 = corner black, 976 = edge black, 980 = white
-#define LHS_TRANSISTOR 19   // A5 | 0 = full black, 3 = corner black, 8 = edge black, 14 = white
-#define MID_TRANSISTOR 17   // A3 | 160 = full black, 231 = corner black, 615 = edge black, 922 = white
+#define LHS_TRANSISTOR 19   // A5 | 2 = full black, 3 = corner black, 8 = edge black, 14 = white
+#define MID_TRANSISTOR 17   // A3 | 299 = full black, 231 = corner black, 582 = edge black, 953 = white
 
+// Logic Constants
+#define RT_WHITE 980
+#define RT_BLACK 951
+#define RT_MID 975
+#define LT_WHITE 14
+#define LT_BLACK 2
+#define LT_MID 8
+#define MT_WHITE 953
+#define MT_BLACK 299
+#define MT_MID 582
 ///////////////////////////
 // GLOBALS
 //////////////////////////
@@ -55,7 +66,6 @@ void setup()
   initTransistors();
   drive(STOP);
   Serial.begin(9600);
-
 }
 
 void loop()
