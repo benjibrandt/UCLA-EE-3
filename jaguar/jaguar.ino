@@ -71,21 +71,21 @@ void setup()
 void loop()
 {
   // We're hitting black with our left, drive left to get back on track
-  if( analogRead(LHS_TRANSISTOR) <= 7 )
+  if( analogRead(LHS_TRANSISTOR) <= LT_MID )
   {
       zeroVisibleLEDS();
       digitalWrite(BLUE_LED, HIGH);
       drive(LEFT);
   }
   // We're hitting black with our right, drive right to get back on track
-  else if( analogRead(RHS_TRANSISTOR) <= 970 )
+  else if( analogRead(RHS_TRANSISTOR) <= RT_MID )
   {
       zeroVisibleLEDS();
       digitalWrite(RED_LED, HIGH);
       drive(RIGHT);
   }
   // Basically, both our LHS and RHS are reading whiteish, and our mid's on black, meaning we're on track
-  else if( MID_TRANSISTOR <= 600 )
+  else if( MID_TRANSISTOR <= MT_MID )
   {
       zeroVisibleLEDS();
       digitalWrite(GREEN_LED, HIGH);
