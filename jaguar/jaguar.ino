@@ -14,7 +14,7 @@
 ///////////////////////////
 // GLOBALS
 //////////////////////////
-enum directions { RIGHT = 0, LEFT = 1, STRAIGHT = 2 };
+enum directions { RIGHT = 0, LEFT = 1, STRAIGHT = 2, STOP = 3 };
 
 ///////////////////////////
 // FUNCTION DELCARATIONS
@@ -29,8 +29,11 @@ void initMotors();
 // Sets pinMode for the transistors.
 void initTransistors();
 
-// Tells robot to turn in direction in int direction which is a value from enum directions
-void turn(int dir);
+// Tells robot to drive in direction given by dir which is a value from the enum directions.
+void drive(int dir);
+
+// Zeros-out the visible LEDS (i.e., digitalWrites low to all).
+void zeroVisibleLEDS();
 
 // testing Motors
 void testMotors();
@@ -47,17 +50,37 @@ void printTransistorReadings();
 void setup() 
 {
   initVisibleLEDS();
+  zeroVisibleLEDS();
   initMotors();
   initTransistors();
+  drive(STOP);
   Serial.begin(9600);
 
 }
 
 void loop()
 {
-    printTransistorReadings(LHS_TRANSISTOR);
-    analogWrite(LHS_MOTOR, 255);
-    //analogWrite(RHS_MOTOR, 0); 
+  // We're hitting black with our left, drive left to get back on track
+  if( analogRead(LHS_TRANSISTOR) <= 7 )
+  {
+      zeroVisibleLEDS();
+      digitalWrite(BLUE_LED, HIGH);
+      drive(LEFT);
+  }
+  // We're hitting black with our right, drive right to get back on track
+  else if( analogRead(RHS_TRANSISTOR) <= 970 )
+  {
+      zeroVisibleLEDS();
+      digitalWrite(RED_LED, HIGH);
+      drive(RIGHT);
+  }
+  // Basically, both our LHS and RHS are reading whiteish, and our mid's on black, meaning we're on track
+  else if( MID_TRANSISTOR <= 600 )
+  {
+      zeroVisibleLEDS();
+      digitalWrite(GREEN_LED, HIGH);
+      drive(STRAIGHT);
+  }
 }
 
 ///////////////////////////
@@ -85,17 +108,34 @@ void initTransistors()
 
 
 
-void turn(int dir)
+void drive(int dir)
 {
   switch (dir)
   {
     case RIGHT:
+      analogWrite(RHS_MOTOR, 192); // RHS speed increases with lower number, so decrease speed here with higher number
+      analogWrite(LHS_MOTOR, 128);
       break;
     case LEFT:
+      analogWrite(RHS_MOTOR, 128);
+      analogWrite(LHS_MOTOR, 64);
       break;
     case STRAIGHT:
+      analogWrite(RHS_MOTOR, 128);
+      analogWrite(LHS_MOTOR, 128);
+      break;
+     case STOP:
+      analogWrite(RHS_MOTOR, 255);
+      analogWrite(LHS_MOTOR, 0);
       break;
   }
+}
+
+void zeroVisibleLEDS()
+{
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(BLUE_LED, LOW);
+  digitalWrite(RED_LED, LOW);
 }
 
 void testMotors()
@@ -144,7 +184,6 @@ void testTransistor(int toTest)
       break;
   }
 }
-
 
 
 void printTransistorReadings(int input)
