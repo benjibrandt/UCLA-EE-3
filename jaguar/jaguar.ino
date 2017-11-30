@@ -8,20 +8,20 @@
 #define RED_LED 10          // D10
 #define LHS_MOTOR 3         // D3; TIP 120 (responds to high)
 #define RHS_MOTOR 5         // D5; TIP 125 (responds to low)
-#define RHS_TRANSISTOR 14   // A0 | 951 = full black, 965 = corner black, 976 = edge black, 980 = white
-#define LHS_TRANSISTOR 19   // A5 | 2 = full black, 3 = corner black, 8 = edge black, 14 = white
-#define MID_TRANSISTOR 17   // A3 | 299 = full black, 231 = corner black, 582 = edge black, 953 = white
+#define RHS_TRANSISTOR 14   // A0 | 951 = full black, 960 = edge black, 974 = white
+#define LHS_TRANSISTOR 19   // A5 | 12 = full black, 19 = edge black, 30 = white
+#define MID_TRANSISTOR 17   // A3 | 290 = full black, 640 = edge black, 920 = white
 
 // Logic Constants
-#define RT_WHITE 980
-#define RT_BLACK 951
-#define RT_MID 975
-#define LT_WHITE 14
-#define LT_BLACK 2
-#define LT_MID 8
-#define MT_WHITE 953
-#define MT_BLACK 299
-#define MT_MID 582
+#define RT_WHITE 979
+#define RT_BLACK 887
+#define RT_MID (RT_WHITE+RT_BLACK)/2
+#define LT_WHITE 16
+#define LT_BLACK 5
+#define LT_MID (LT_WHITE+LT_BLACK)/2
+#define MT_WHITE 963
+#define MT_BLACK 386
+#define MT_MID (MT_WHITE+MT_BLACK)/2
 ///////////////////////////
 // GLOBALS
 //////////////////////////
@@ -64,12 +64,13 @@ void setup()
   zeroVisibleLEDS();
   initMotors();
   initTransistors();
-  drive(STOP);
   Serial.begin(9600);
 }
 
 void loop()
 {
+  printTransistorReadings(MID_TRANSISTOR);
+  zeroVisibleLEDS();
   // We're hitting black with our left, drive left to get back on track
   if( analogRead(LHS_TRANSISTOR) <= LT_MID )
   {
@@ -85,11 +86,18 @@ void loop()
       drive(RIGHT);
   }
   // Basically, both our LHS and RHS are reading whiteish, and our mid's on black, meaning we're on track
-  if( MID_TRANSISTOR <= MT_MID )
+  if( analogRead(MID_TRANSISTOR) <= MT_MID )
   {
       zeroVisibleLEDS();
       digitalWrite(GREEN_LED, HIGH);
       drive(STRAIGHT);
+  }
+  if( analogRead(MID_TRANSISTOR) >= MT_WHITE-5 && analogRead(LHS_TRANSISTOR) >= LT_WHITE-2 && analogRead(RHS_TRANSISTOR) >= RT_WHITE-5 )
+  {
+    zeroVisibleLEDS();
+    digitalWrite(RED_LED, HIGH);
+    digitalWrite(BLUE_LED, HIGH);
+    drive(STOP); 
   }
 }
 
@@ -116,19 +124,17 @@ void initTransistors()
   pinMode(MID_TRANSISTOR, INPUT);
 }
 
-
-
 void drive(int dir)
 {
   switch (dir)
   {
     case RIGHT:
-      analogWrite(RHS_MOTOR, 192); // RHS speed increases with lower number, so decrease speed here with higher number
+      analogWrite(RHS_MOTOR, 191); // RHS speed increases with lower number, so decrease speed here with higher number
       analogWrite(LHS_MOTOR, 128);
       break;
     case LEFT:
-      analogWrite(RHS_MOTOR, 128);
-      analogWrite(LHS_MOTOR, 64);
+      analogWrite(RHS_MOTOR, 124);
+      analogWrite(LHS_MOTOR, 60);
       break;
     case STRAIGHT:
       analogWrite(RHS_MOTOR, 128);
@@ -143,15 +149,15 @@ void drive(int dir)
 
 void zeroVisibleLEDS()
 {
-  digitalWrite(GREEN_LED, LOW);
-  digitalWrite(BLUE_LED, LOW);
-  digitalWrite(RED_LED, LOW);
+  digitalWrite(GREEN_LED, 0);
+  digitalWrite(BLUE_LED, 0);
+  digitalWrite(RED_LED, 0);
 }
 
 void testMotors()
 {
-  analogWrite(RHS_MOTOR, HIGH);
-  analogWrite(LHS_MOTOR, LOW);
+  analogWrite(RHS_MOTOR, LOW);
+  analogWrite(LHS_MOTOR, HIGH);
 }
 
 void testTransistor(int toTest)
