@@ -27,7 +27,7 @@
 // GLOBALS
 //////////////////////////
 enum directions { RIGHT = 0, LEFT = 1, STRAIGHT = 2, STOP = 3 };
-bool extraCredit = FALSE;
+bool extraCreditRun = 0;
 int ecInitCounter = 1;
 int ecFlashCounter = 0;
 
@@ -49,6 +49,9 @@ void drive(int dir);
 
 // Zeros-out the visible LEDS (i.e., digitalWrites low to all).
 void zeroVisibleLEDS();
+
+// Hacky extra credit logic.
+void extraCredit();
 
 // testing Motors
 void testMotors();
@@ -74,8 +77,8 @@ void setup()
 void loop()
 {
   printTransistorReadings(LHS_TRANSISTOR);
-  printTransistorReadings(RHS_TRANSISTOR);
-  printTransistorReadings(MID_TRANSISTOR);
+  //printTransistorReadings(RHS_TRANSISTOR);
+  //printTransistorReadings(MID_TRANSISTOR);
   zeroVisibleLEDS();
   // We're hitting black with our left, drive left to get back on track
   if( analogRead(LHS_TRANSISTOR) <= LT_MID )
