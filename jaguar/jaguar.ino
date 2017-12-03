@@ -149,12 +149,12 @@ void drive(int dir)
   switch (dir)
   {
     case RIGHT:
-      analogWrite(RHS_MOTOR, 200); // RHS speed increases with lower number, so decrease speed here with higher number
+      analogWrite(RHS_MOTOR, 190); // RHS speed increases with lower number, so decrease speed here with higher number
       analogWrite(LHS_MOTOR, 90);
       break;
     case LEFT:
       analogWrite(RHS_MOTOR, 140); 
-      analogWrite(LHS_MOTOR, 40);
+      analogWrite(LHS_MOTOR, 50);
       break;
     case STRAIGHT:
       analogWrite(RHS_MOTOR, 160);
