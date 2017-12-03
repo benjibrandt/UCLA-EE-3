@@ -8,19 +8,20 @@
 #define RED_LED 10          // D10
 #define LHS_MOTOR 3         // D3; TIP 120 (responds to high)
 #define RHS_MOTOR 5         // D5; TIP 125 (responds to low)
-#define RHS_TRANSISTOR 14   // A0 | 951 = full black, 960 = edge black, 974 = white
-#define LHS_TRANSISTOR 19   // A5 | 12 = full black, 19 = edge black, 30 = white
-#define MID_TRANSISTOR 17   // A3 | 290 = full black, 640 = edge black, 920 = white
+#define RHS_TRANSISTOR 14   // A0 | 5 = full black, 11 = white,     12.5 = edge black
+#define LHS_TRANSISTOR 19   // A5 | 6 = full black, 19 = white,      19 = edge black
+#define MID_TRANSISTOR 17   // A3 | 7 = full black,  10= white,      640 = edge black
 
+//do highest white and 1 below black
 // Logic Constants
-#define RT_WHITE 979
-#define RT_BLACK 887
+#define RT_WHITE 10
+#define RT_BLACK 3
 #define RT_MID (RT_WHITE+RT_BLACK)/2
-#define LT_WHITE 16
-#define LT_BLACK 5
+#define LT_WHITE 15
+#define LT_BLACK 3
 #define LT_MID (LT_WHITE+LT_BLACK)/2
-#define MT_WHITE 963
-#define MT_BLACK 386
+#define MT_WHITE 10
+#define MT_BLACK 5
 #define MT_MID (MT_WHITE+MT_BLACK)/2
 ///////////////////////////
 // GLOBALS
@@ -69,6 +70,8 @@ void setup()
 
 void loop()
 {
+  printTransistorReadings(LHS_TRANSISTOR);
+  printTransistorReadings(RHS_TRANSISTOR);
   printTransistorReadings(MID_TRANSISTOR);
   zeroVisibleLEDS();
   // We're hitting black with our left, drive left to get back on track
@@ -92,9 +95,8 @@ void loop()
       digitalWrite(GREEN_LED, HIGH);
       drive(STRAIGHT);
   }
-  if( analogRead(MID_TRANSISTOR) >= MT_WHITE-5 && analogRead(LHS_TRANSISTOR) >= LT_WHITE-2 && analogRead(RHS_TRANSISTOR) >= RT_WHITE-5 )
+  if( analogRead(MID_TRANSISTOR) >= MT_WHITE && analogRead(LHS_TRANSISTOR) >= LT_WHITE && analogRead(RHS_TRANSISTOR) >= RT_WHITE )
   {
-    zeroVisibleLEDS();
     digitalWrite(RED_LED, HIGH);
     digitalWrite(BLUE_LED, HIGH);
     drive(STOP); 
@@ -129,16 +131,16 @@ void drive(int dir)
   switch (dir)
   {
     case RIGHT:
-      analogWrite(RHS_MOTOR, 191); // RHS speed increases with lower number, so decrease speed here with higher number
-      analogWrite(LHS_MOTOR, 128);
+      analogWrite(RHS_MOTOR, 160); // RHS speed increases with lower number, so decrease speed here with higher number
+      analogWrite(LHS_MOTOR, 130);
       break;
     case LEFT:
-      analogWrite(RHS_MOTOR, 124);
-      analogWrite(LHS_MOTOR, 60);
+      analogWrite(RHS_MOTOR, 120);
+      analogWrite(LHS_MOTOR, 70);
       break;
     case STRAIGHT:
-      analogWrite(RHS_MOTOR, 128);
-      analogWrite(LHS_MOTOR, 128);
+      analogWrite(RHS_MOTOR, 160);
+      analogWrite(LHS_MOTOR, 70); //the left motor is faster than the right motor
       break;
      case STOP:
       analogWrite(RHS_MOTOR, 255);
