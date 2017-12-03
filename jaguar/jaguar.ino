@@ -27,6 +27,9 @@
 // GLOBALS
 //////////////////////////
 enum directions { RIGHT = 0, LEFT = 1, STRAIGHT = 2, STOP = 3 };
+bool extraCredit = FALSE;
+int ecInitCounter = 1;
+int ecFlashCounter = 0;
 
 ///////////////////////////
 // FUNCTION DELCARATIONS
@@ -154,6 +157,32 @@ void zeroVisibleLEDS()
   digitalWrite(GREEN_LED, 0);
   digitalWrite(BLUE_LED, 0);
   digitalWrite(RED_LED, 0);
+}
+
+void extraCredit()
+{
+  if( ecInitCounter <= 128 )
+  {
+    analogWrite(RHS_MOTOR, 128-ecInitCounter);
+    analogWrite(LHS_MOTOR, 128+ecInitCounter);
+    ecInitCounter += 1;
+  }
+  else if( ecInitCounter > 128 && ecFlashCounter < 5 )
+  {
+    digitalWrite(GREEN_LED, HIGH);
+    digitalWrite(BLUE_LED, HIGH);
+    digitalWrite(RED_LED, HIGH);
+    delay(750);  
+    digitalWrite(GREEN_LED, LOW);
+    digitalWrite(BLUE_LED, LOW);
+    digitalWrite(RED_LED, LOW);
+    delay(750);
+    ecFlashCounter += 1;
+  }
+  else
+  {
+    drive(STRAIGHT);
+  }
 }
 
 void testMotors()
