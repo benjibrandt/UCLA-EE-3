@@ -31,6 +31,7 @@ bool extraCreditRun = 0;
 int ecInitCounter = 1;
 int ecFlashCounter = 0;
 int stopCounter = 0;
+bool ecBoost = 1;
 
 ///////////////////////////
 // FUNCTION DELCARATIONS
@@ -72,11 +73,13 @@ void setup()
   zeroVisibleLEDS();
   initMotors();
   initTransistors();
+  drive(STRAIGHT);
   Serial.begin(9600);
 }
 
 void loop()
 {
+
   printTransistorReadings(LHS_TRANSISTOR);
   zeroVisibleLEDS();
   // Basically, both our LHS and RHS are reading whiteish, and our mid's on black, meaning we're on track
@@ -114,6 +117,8 @@ void loop()
       delay(5000); 
     //}
   }
+
+
 }
 
 ///////////////////////////
@@ -144,12 +149,12 @@ void drive(int dir)
   switch (dir)
   {
     case RIGHT:
-      analogWrite(RHS_MOTOR, 190); // RHS speed increases with lower number, so decrease speed here with higher number
+      analogWrite(RHS_MOTOR, 200); // RHS speed increases with lower number, so decrease speed here with higher number
       analogWrite(LHS_MOTOR, 90);
       break;
     case LEFT:
       analogWrite(RHS_MOTOR, 140); 
-      analogWrite(LHS_MOTOR, 50);
+      analogWrite(LHS_MOTOR, 40);
       break;
     case STRAIGHT:
       analogWrite(RHS_MOTOR, 160);
@@ -171,27 +176,37 @@ void zeroVisibleLEDS()
 
 void extraCredit()
 {
-  if( ecInitCounter <= 128 )
+  Serial.println("ecInitCounter: " + String(ecInitCounter));
+Serial.println("ecFlashCounter: " + String(ecFlashCounter));
+  if( ecInitCounter <= 17 )
   {
-    analogWrite(RHS_MOTOR, 128-ecInitCounter);
-    analogWrite(LHS_MOTOR, 128+ecInitCounter);
+    analogWrite(RHS_MOTOR, 140+2.71*ecInitCounter); //140
+    analogWrite(LHS_MOTOR, 81-2*ecInitCounter); //90
     ecInitCounter += 1;
+    delay(750);
   }
-  else if( ecInitCounter > 128 && ecFlashCounter < 5 )
+  else if( ecInitCounter > 17 && ecFlashCounter < 5 )
   {
     digitalWrite(GREEN_LED, HIGH);
     digitalWrite(BLUE_LED, HIGH);
     digitalWrite(RED_LED, HIGH);
-    delay(750);  
+    delay(100);  
     digitalWrite(GREEN_LED, LOW);
     digitalWrite(BLUE_LED, LOW);
     digitalWrite(RED_LED, LOW);
-    delay(750);
+    delay(150);
     ecFlashCounter += 1;
   }
   else
   {
-    drive(STRAIGHT);
+    if( ecBoost )
+    {
+      analogWrite(RHS_MOTOR, LOW);
+      analogWrite(LHS_MOTOR, HIGH);
+      ecBoost = 0;
+    }
+    else
+      drive(STRAIGHT);
   }
 }
 
