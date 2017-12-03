@@ -14,14 +14,14 @@
 
 //do highest white and 1 below black
 // Logic Constants
-#define RT_WHITE 10
-#define RT_BLACK 3
+#define RT_WHITE 953
+#define RT_BLACK 302
 #define RT_MID (RT_WHITE+RT_BLACK)/2
-#define LT_WHITE 15
-#define LT_BLACK 3
+#define LT_WHITE 771
+#define LT_BLACK 242
 #define LT_MID (LT_WHITE+LT_BLACK)/2
-#define MT_WHITE 10
-#define MT_BLACK 5
+#define MT_WHITE 946
+#define MT_BLACK 480
 #define MT_MID (MT_WHITE+MT_BLACK)/2
 ///////////////////////////
 // GLOBALS
@@ -30,6 +30,7 @@ enum directions { RIGHT = 0, LEFT = 1, STRAIGHT = 2, STOP = 3 };
 bool extraCreditRun = 0;
 int ecInitCounter = 1;
 int ecFlashCounter = 0;
+int stopCounter = 0;
 
 ///////////////////////////
 // FUNCTION DELCARATIONS
@@ -77,12 +78,19 @@ void setup()
 void loop()
 {
   printTransistorReadings(LHS_TRANSISTOR);
-  //printTransistorReadings(RHS_TRANSISTOR);
-  //printTransistorReadings(MID_TRANSISTOR);
   zeroVisibleLEDS();
+  // Basically, both our LHS and RHS are reading whiteish, and our mid's on black, meaning we're on track
+  if( analogRead(MID_TRANSISTOR) <= MT_MID )
+  {
+      stopCounter = 0;
+      zeroVisibleLEDS();
+      digitalWrite(GREEN_LED, HIGH);
+      drive(STRAIGHT);
+  }
   // We're hitting black with our left, drive left to get back on track
   if( analogRead(LHS_TRANSISTOR) <= LT_MID )
   {
+     stopCounter = 0;
       zeroVisibleLEDS();
       digitalWrite(BLUE_LED, HIGH);
       drive(LEFT);
@@ -90,22 +98,21 @@ void loop()
   // We're hitting black with our right, drive right to get back on track
   if( analogRead(RHS_TRANSISTOR) <= RT_MID )
   {
+      stopCounter = 0;
       zeroVisibleLEDS();
       digitalWrite(RED_LED, HIGH);
       drive(RIGHT);
   }
-  // Basically, both our LHS and RHS are reading whiteish, and our mid's on black, meaning we're on track
-  if( analogRead(MID_TRANSISTOR) <= MT_MID )
+  if( analogRead(MID_TRANSISTOR) <= MT_MID && analogRead(LHS_TRANSISTOR) <= LT_MID && analogRead(RHS_TRANSISTOR) <= RT_MID )
   {
-      zeroVisibleLEDS();
-      digitalWrite(GREEN_LED, HIGH);
-      drive(STRAIGHT);
-  }
-  if( analogRead(MID_TRANSISTOR) >= MT_WHITE && analogRead(LHS_TRANSISTOR) >= LT_WHITE && analogRead(RHS_TRANSISTOR) >= RT_WHITE )
-  {
-    digitalWrite(RED_LED, HIGH);
-    digitalWrite(BLUE_LED, HIGH);
-    drive(STOP); 
+    //stopCounter += 1;
+    //if( stopCounter >= 150 )
+    //{
+      digitalWrite(RED_LED, HIGH);
+      digitalWrite(BLUE_LED, HIGH);
+      drive(STOP);
+      delay(5000); 
+    //}
   }
 }
 
@@ -137,12 +144,12 @@ void drive(int dir)
   switch (dir)
   {
     case RIGHT:
-      analogWrite(RHS_MOTOR, 160); // RHS speed increases with lower number, so decrease speed here with higher number
-      analogWrite(LHS_MOTOR, 130);
+      analogWrite(RHS_MOTOR, 190); // RHS speed increases with lower number, so decrease speed here with higher number
+      analogWrite(LHS_MOTOR, 90);
       break;
     case LEFT:
-      analogWrite(RHS_MOTOR, 120);
-      analogWrite(LHS_MOTOR, 70);
+      analogWrite(RHS_MOTOR, 140); 
+      analogWrite(LHS_MOTOR, 50);
       break;
     case STRAIGHT:
       analogWrite(RHS_MOTOR, 160);
